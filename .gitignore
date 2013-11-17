@@ -1,0 +1,7 @@
+*.VB
+[_A-GI-Z]*.CS
+He*.CS
+HPI*.CS
+*proj
+*.user
+*.sln
