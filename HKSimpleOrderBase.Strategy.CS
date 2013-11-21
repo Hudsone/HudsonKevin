@@ -15,6 +15,7 @@ namespace PowerLanguage.Strategy {
 		private IOrderMarket order;
 		private IOrderMarket close;
 		private bool longSide;
+		private string prefix;
 		
 		public bool LongSide {
 			get { return longSide; }
@@ -31,6 +32,7 @@ namespace PowerLanguage.Strategy {
 		}
 		
 		protected void CreateOrder(string prefix) {
+			this.prefix= prefix;
 			buyOrder= OrderCreator.MarketNextBar( new SOrderParameters( Contracts.Default, prefix+ "Buy", EOrderAction.Buy));
 			buyClose= OrderCreator.MarketNextBar( new SOrderParameters( Contracts.Default, prefix+ "Buy", EOrderAction.Sell));
 			sellOrder= OrderCreator.MarketNextBar( new SOrderParameters( Contracts.Default, prefix+ "Sell", EOrderAction.SellShort));
@@ -41,8 +43,27 @@ namespace PowerLanguage.Strategy {
 			order.Send();
 		}
 		
+		public void Order( int unit) {
+			SetUnit( unit);
+			LongSide= LongSide;
+			order.Send();
+		}
+		
 		public void Close() {
 			close.Send();
+		}
+		
+		public void Close( int unit) {
+			SetUnit( unit);
+			LongSide= LongSide;
+			close.Send();
+		}
+		
+		protected void SetUnit( int Order) {
+			buyOrder= OrderCreator.MarketNextBar( new SOrderParameters( Contracts.CreateUserSpecified( Order), prefix+ "Buy", EOrderAction.Buy));
+			buyClose= OrderCreator.MarketNextBar( new SOrderParameters( Contracts.CreateUserSpecified( Order), prefix+ "Buy", EOrderAction.Sell));
+			sellOrder= OrderCreator.MarketNextBar( new SOrderParameters( Contracts.CreateUserSpecified( Order), prefix+ "Sell", EOrderAction.SellShort));
+			sellClose= OrderCreator.MarketNextBar( new SOrderParameters( Contracts.CreateUserSpecified( Order), prefix+ "Sell", EOrderAction.BuyToCover));
 		}
 		
 		protected override void Create() {
