@@ -33,7 +33,7 @@ namespace PowerLanguage.Strategy {
 			// create variable objects, function objects, order objects etc.
 			CreateOrder("RandSt");
 			rand= new Random();
-			stopTool= new HKStopTool( this, this.Close);
+			stopTool= new HKStopTool( this, this.CustomClose);
 		}
 		protected override void StartCalc() {
 			// assign inputs
@@ -68,6 +68,10 @@ namespace PowerLanguage.Strategy {
 			}
 			
 			stopTool.TestToStop( Bars, CurrentPosition, currentDate);
+		}
+		
+		public void CustomClose() {
+			Close();
 		}
 	}
 }

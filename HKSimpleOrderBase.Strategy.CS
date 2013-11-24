@@ -33,37 +33,26 @@ namespace PowerLanguage.Strategy {
 		
 		protected void CreateOrder(string prefix) {
 			this.prefix= prefix;
-			buyOrder= OrderCreator.MarketNextBar( new SOrderParameters( Contracts.Default, prefix+ "Buy", EOrderAction.Buy));
-			buyClose= OrderCreator.MarketNextBar( new SOrderParameters( Contracts.Default, prefix+ "Buy", EOrderAction.Sell));
-			sellOrder= OrderCreator.MarketNextBar( new SOrderParameters( Contracts.Default, prefix+ "Sell", EOrderAction.SellShort));
-			sellClose= OrderCreator.MarketNextBar( new SOrderParameters( Contracts.Default, prefix+ "Sell", EOrderAction.BuyToCover));
+			buyOrder= OrderCreator.MarketNextBar( new SOrderParameters( Contracts.UserSpecified, prefix+ "Buy", EOrderAction.Buy));
+			buyClose= OrderCreator.MarketNextBar( new SOrderParameters( Contracts.UserSpecified, prefix+ "Buy", EOrderAction.Sell));
+			sellOrder= OrderCreator.MarketNextBar( new SOrderParameters( Contracts.UserSpecified, prefix+ "Sell", EOrderAction.SellShort));
+			sellClose= OrderCreator.MarketNextBar( new SOrderParameters( Contracts.UserSpecified, prefix+ "Sell", EOrderAction.BuyToCover));
 		}
 		
 		public void Order() {
-			order.Send();
+			order.Send( 1);
 		}
 		
 		public void Order( int unit) {
-			SetUnit( unit);
-			LongSide= LongSide;
-			order.Send();
+			order.Send( unit);
 		}
 		
 		public void Close() {
-			close.Send();
+			close.Send( 1);
 		}
 		
 		public void Close( int unit) {
-			SetUnit( unit);
-			LongSide= LongSide;
-			close.Send();
-		}
-		
-		protected void SetUnit( int Order) {
-			buyOrder= OrderCreator.MarketNextBar( new SOrderParameters( Contracts.CreateUserSpecified( Order), prefix+ "Buy", EOrderAction.Buy));
-			buyClose= OrderCreator.MarketNextBar( new SOrderParameters( Contracts.CreateUserSpecified( Order), prefix+ "Buy", EOrderAction.Sell));
-			sellOrder= OrderCreator.MarketNextBar( new SOrderParameters( Contracts.CreateUserSpecified( Order), prefix+ "Sell", EOrderAction.SellShort));
-			sellClose= OrderCreator.MarketNextBar( new SOrderParameters( Contracts.CreateUserSpecified( Order), prefix+ "Sell", EOrderAction.BuyToCover));
+			close.Send( unit);
 		}
 		
 		protected override void Create() {
